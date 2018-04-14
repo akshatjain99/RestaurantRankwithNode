@@ -2,11 +2,12 @@ const express = require('express');
 const router = express.Router();
 
 router.get('/', (req, res) => {
-  const aj={name:'akshat', age:19, cool:true};
+  //const aj={name:'akshat', age:19, cool:true};
   //res.send(req.query.name);
   res.render('hello',{
-    name:'Akshat',
-    dog:'req.query.dog'
+    name:req.query.name,
+    dog:'Cooper',
+    title:'I love food'
   });
 });
 
