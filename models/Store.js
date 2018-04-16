@@ -1,6 +1,6 @@
 const mongoose=require('mongoose');
 mongoose.Promise=global.Promise;
-const slugs=require('slugs');
+const slug=require('slugs');
 
 const storeSchema=new mongoose.Schema({
   name:{
@@ -26,4 +26,4 @@ storeSchema.pre('save', function(next){
   next();
 });
 
-module.exports=mongoose.model('Store',storeSchema);
+module.exports=mongoose.model('Store',storeSchema); //creating and exporting the model to be used in controller
