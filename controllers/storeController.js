@@ -1,5 +1,22 @@
 const mongoose=require('mongoose');
 const Store=mongoose.model('Store'); //importing the mdoel from store.js
+const multer=require('multer'); //Multer is a middleware for uploading files
+const jimp=require('jimp'); //Resize photos with jimp
+const uuid=require('uuid');
+
+const multerOptions={
+  storage:multer.memoryStorage(),
+  fileFilter:function(req,file,next){
+    const isPhoto=file.mimetype.startsWith('image/'); //checking to see if file is a photo
+    if(isPhoto){
+      next(null,true); //if 2 parameters are passed to null, then the secon is passed. If only one is passed then its an error
+    }else{
+      next({message:'That file type is not allowed'}, false);
+    }
+  }
+};
+
+
 
 
 exports.homePage=(req,res)=>{
@@ -10,6 +27,24 @@ exports.homePage=(req,res)=>{
 exports.addStore=(req,res)=>{
   res.render('editStore',{ title:'Add Store'});
 };
+
+exports.upload=multer(multerOptions).single('photo');
+
+exports.resize=async (req,res,next)=>{
+  //check if there is file to upload
+  if (!req.file){
+    next(); //if no new file to upload then next
+    return;
+  }
+  const extension=req.file.mimetype.split('/')[1];
+  req.body.photo=`${uuid.v4()}.${extension}`;
+  const photo=await jimp.read(req.file.buffer);
+  await photo.resize(800,jimp.AUTO);
+  await photo.write(`./public/uploads/${req.body.photo}`);
+  //once we have written the photo, keep going
+  next();
+};
+
 
 exports.createStore=async (req,res)=>{
   //res.json(req.body); //req.body contains all the form information from the body

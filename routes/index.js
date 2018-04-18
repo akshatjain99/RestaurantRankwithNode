@@ -6,8 +6,19 @@ const {catchErrors}=require('../handlers/errorHandlers'); //destructuring using 
 router.get('/', catchErrors(storeController.getStores));
 router.get('/stores', catchErrors(storeController.getStores));
 router.get('/add', storeController.addStore);
-router.post('/add', catchErrors(storeController.createStore));//to route after the form has been submitted
-router.post('/add/:id', catchErrors(storeController.updateStore)); 
+
+router.post('/add', 
+  storeController.upload,
+  catchErrors(storeController.resize),
+  catchErrors(storeController.createStore)
+);//to route after the form has been submitted
+
+router.post('/add/:id', 
+  storeController.upload,
+  catchErrors(storeController.resize),
+  catchErrors(storeController.updateStore)); 
+
+
 router.get('/stores/:id/edit', catchErrors(storeController.editStore)) //id as a variable will be available to us
 
 module.exports = router;
