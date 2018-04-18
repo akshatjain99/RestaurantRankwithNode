@@ -31,6 +31,9 @@ exports.editStore=async (req,res)=>{
 }
 
 exports.updateStore=async (req,res)=>{
+  //to set the location type as point to display on map
+  req.body.location.type="Point";
+
   const store=await Store.findOneAndUpdate({_id:req.params.id}, req.body, {
     new:true, //return the new store instead of the old one
     runValidators:true
