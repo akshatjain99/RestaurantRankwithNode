@@ -1,8 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const storeController=require('../controllers/storeController');
+const userController=require('../controllers/userController');
 const {catchErrors}=require('../handlers/errorHandlers'); //destructuring using ES6
 
+
+//StoreControllers
 router.get('/', catchErrors(storeController.getStores));
 router.get('/stores', catchErrors(storeController.getStores));
 router.get('/add', storeController.addStore);
@@ -26,6 +29,11 @@ router.get('/store/:slug', catchErrors(storeController.getStoreBySlug)); //to cr
 router.get('/tags', catchErrors(storeController.getStoresByTag)); //Routing to tags page
 router.get('/tags/:tag', catchErrors(storeController.getStoresByTag));
 
+//UserControllers
 
+router.get('/login', userController.loginForm);
+router.get('/register', userController.registerForm);
+
+router.post('/register', userController.validateRegister);
 
 module.exports = router;
