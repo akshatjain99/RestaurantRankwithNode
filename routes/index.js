@@ -19,6 +19,8 @@ router.post('/add/:id',
   catchErrors(storeController.updateStore)); 
 
 
-router.get('/stores/:id/edit', catchErrors(storeController.editStore)) //id as a variable will be available to us
+router.get('/stores/:id/edit', catchErrors(storeController.editStore)); //id as a variable will be available to us
+
+router.get('/store/:slug', catchErrors(storeController.getStoreBySlug)); //to create single store information page
 
 module.exports = router;
