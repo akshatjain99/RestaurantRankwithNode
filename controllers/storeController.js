@@ -87,3 +87,15 @@ exports.getStoreBySlug=async (req,res,next)=>{
   res.render('store', {title:store.name, store:store});
 
 }
+
+exports.getStoresByTag=async (req,res)=>{
+  const tag= req.params.tag;
+  const tagQuery= tag || {$exists:true};
+
+  const tagsPromise=Store.getTagsList(); //getTagsList is a custom static method defined in storeSchema
+  const storesPromise= Store.find({tags:tagQuery});
+
+  const [tags ,stores]= await Promise.all([tagsPromise, storesPromise]); //Fire off both promises simultaneously 
+  //and also destructuring using ES6
+  res.render('tag', {title:'Tags', tags:tags, tag:tag, stores:stores});
+}

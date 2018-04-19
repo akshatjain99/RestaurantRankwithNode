@@ -23,4 +23,9 @@ router.get('/stores/:id/edit', catchErrors(storeController.editStore)); //id as 
 
 router.get('/store/:slug', catchErrors(storeController.getStoreBySlug)); //to create single store information page
 
+router.get('/tags', catchErrors(storeController.getStoresByTag)); //Routing to tags page
+router.get('/tags/:tag', catchErrors(storeController.getStoresByTag));
+
+
+
 module.exports = router;
