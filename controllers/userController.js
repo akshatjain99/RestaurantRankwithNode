@@ -1,4 +1,6 @@
 const mongoose=require('mongoose');
+const User= mongoose.model('User');
+const promisify= require('es6-promisify');
 
 exports.loginForm= (req,res)=>{
   res.render('login', {title:'Login'});
@@ -31,3 +33,18 @@ exports.validateRegister= (req,res,next) =>{
   next(); //continue
 
 }
+
+
+exports.register=async (req,res,next)=>{
+  const user= new User({email:req.body.email, name: req.body.name});
+
+  //Register is from passpoer-local and is used to save passwords
+  //it is callback based and not promises
+  //User.register(user,req.body.password, function(err,user){});
+  //Promisify is used to turn this into  promise based 
+
+  const register = promisify(User.register, User);
+  await register(user, req.body.password);
+  next(); //pass to authController.login
+}
+
