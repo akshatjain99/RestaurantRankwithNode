@@ -9,7 +9,7 @@ const {catchErrors}=require('../handlers/errorHandlers'); //destructuring using 
 //StoreControllers
 router.get('/', catchErrors(storeController.getStores));
 router.get('/stores', catchErrors(storeController.getStores));
-router.get('/add', storeController.addStore);
+router.get('/add', authController.isLoggedIn,storeController.addStore);
 
 router.post('/add', 
   storeController.upload,
@@ -33,6 +33,8 @@ router.get('/tags/:tag', catchErrors(storeController.getStoresByTag));
 //UserControllers
 
 router.get('/login', userController.loginForm);
+router.post('/login', authController.login);
+
 router.get('/register', userController.registerForm);
 
 //First validate the from server side
@@ -45,4 +47,11 @@ router.post('/register',
   authController.login
   );
 
+//Logout
+router.get('/logout', authController.logout);
+
+//Account page
+
+router.get('/account', authController.isLoggedIn,userController.account);
+router.post('/account', catchErrors(userController.updateAccount));
 module.exports = router;

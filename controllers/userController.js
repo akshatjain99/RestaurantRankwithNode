@@ -27,7 +27,7 @@ exports.validateRegister= (req,res,next) =>{
 
   if(errors){
     req.flash('error', errors.map(err => err.msg));
-    res.render('register', {title:Register, body:req.body, flashes:req.flash() });
+    res.render('/register', {title:Register, body:req.body, flashes:req.flash() });
     return; //stop
   };
   next(); //continue
@@ -48,3 +48,26 @@ exports.register=async (req,res,next)=>{
   next(); //pass to authController.login
 }
 
+exports.account= (req,res)=>{
+  res.render('account', {title:'Edit your account'});
+}
+
+exports.updateAccount= async (req,res)=>{
+  const updates={
+    name: req.body.name,
+    email: req.body.email
+  };
+
+  const user= await User.findOneAndUpdate(
+    { _id: req.user.id}, //query
+    { $set: updates}, //updates
+    {
+      new:true,
+      runValidators:true,
+      context: 'query'
+    }
+  );
+  req.flash('success', 'Successfully updated details');
+  res.redirect('back');
+
+}
