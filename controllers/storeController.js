@@ -109,3 +109,28 @@ exports.getStoresByTag=async (req,res)=>{
   //and also destructuring using ES6
   res.render('tag', {title:'Tags', tags:tags, tag:tag, stores:stores});
 }
+
+
+exports.searchStores= async (req,res)=>{
+  //res.json(req.query);
+
+  const store= await Store
+//first find stores that match the query then sort them according to the textScore in meta
+  .find({
+    $text:{
+      $search: req.query.q
+    }
+  }, {
+    score: {$meta: 'textScore'}
+  }
+)
+  .sort({
+    score: {$meta: 'textScore'}
+  })
+  .limit(5);
+
+  res.json(store);
+
+
+
+}

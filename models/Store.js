@@ -40,6 +40,14 @@ const storeSchema=new mongoose.Schema({
   }
 });
 
+
+//Define our indexes
+storeSchema.index({
+  name: 'text', //Index name as text
+  description: 'text'
+});
+
+
 storeSchema.pre('save', async function(next){
   if(!this.isModified('name')){ //Only run the function when the name of the store has been modified and not after every save
     next();
