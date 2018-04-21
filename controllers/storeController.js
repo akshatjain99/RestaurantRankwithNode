@@ -47,6 +47,8 @@ exports.resize=async (req,res,next)=>{
 
 
 exports.createStore=async (req,res)=>{
+  req.body.author= req.user._id;
+
   //res.json(req.body); //req.body contains all the form information from the body
   const store=new Store(req.body);
   await store.save(); //mongoose returns a promise so we need to await that promise to come back
@@ -59,9 +61,17 @@ exports.getStores=async (req,res)=>{
   const stores=await Store.find(); //Query all the stores
   res.render('stores',{title:'Stores', stores:stores});
 };
+//Check if store has been created by user or not
+const confirmOwner= (store,user)=>{
+  if(!(store.author.equals(user._id))){
+    throw Error('You must own a store in order to edit it');
+  };
+}
+
 
 exports.editStore=async (req,res)=>{
   const store=await Store.findOne({_id:req.params.id});
+  confirmOwner(store,req.user);
   res.render('editStore', {title:`Edit ${store.name}`, store:store});
 }
 
@@ -79,7 +89,7 @@ exports.updateStore=async (req,res)=>{
 
 
 exports.getStoreBySlug=async (req,res,next)=>{
-  const store = await Store.findOne({slug:req.params.slug});
+  const store = await Store.findOne({slug:req.params.slug}).populate('author');
   if (!store){
     next();
     return;
