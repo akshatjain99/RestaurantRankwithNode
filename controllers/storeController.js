@@ -1,5 +1,6 @@
 const mongoose=require('mongoose');
-const Store=mongoose.model('Store'); //importing the mdoel from store.js
+const Store=mongoose.model('Store');
+const User=mongoose.model('User'); //importing the mdoel from store.js
 const multer=require('multer'); //Multer is a middleware for uploading files
 const jimp=require('jimp'); //Resize photos with jimp
 const uuid=require('uuid');
@@ -159,4 +160,16 @@ exports.mapStores= async (req,res)=>{
 
 exports.mapPage= (req,res)=>{
   res.render('map', {title:'Map'});
+}
+
+
+exports.heartStore= async (req,res)=>{
+  const hearts= req.user.hearts.map(obj =>obj.toString());
+  const operator= hearts.includes(req.params.id) ? '$pull' : '$addToSet' ;
+  const user= await User
+    .findByIdAndUpdate(req.user._id,
+      {[operator]: {hearts: req.params.id}}, 
+      {new: true}
+    );
+  res.json(user);
 }
