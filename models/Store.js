@@ -48,6 +48,9 @@ storeSchema.index({
 });
 
 
+storeSchema.index({location:'2dsphere'});
+
+
 storeSchema.pre('save', async function(next){
   if(!this.isModified('name')){ //Only run the function when the name of the store has been modified and not after every save
     next();
