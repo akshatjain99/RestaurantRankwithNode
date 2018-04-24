@@ -90,7 +90,7 @@ exports.updateStore=async (req,res)=>{
 
 
 exports.getStoreBySlug=async (req,res,next)=>{
-  const store = await Store.findOne({slug:req.params.slug}).populate('author');
+  const store = await Store.findOne({slug:req.params.slug}).populate('author reviews');
   if (!store){
     next();
     return;
@@ -172,4 +172,12 @@ exports.heartStore= async (req,res)=>{
       {new: true}
     );
   res.json(user);
+}
+
+
+exports.getHearts =async (req,res)=>{
+  const stores = await Store.find({
+    _id: {$in: req.user.hearts}
+  });
+  res.render('stores', {title:'Hearted Stores', stores: stores});
 }

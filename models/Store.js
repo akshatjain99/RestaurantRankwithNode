@@ -38,7 +38,11 @@ const storeSchema=new mongoose.Schema({
       required:'You must enter an address'
     }
   }
-});
+}, {
+    toJSON: {virtuals: 'true'},
+    toObject:{virtuals:'true'}
+  }
+);
 
 
 //Define our indexes
@@ -76,5 +80,13 @@ storeSchema.statics.getTagsList = function(){
 
   ]);
 }
+
+//find reviews where the stores._id property === reviews.store property
+storeSchema.virtual('reviews', {
+  ref: 'Review', //name of the model
+  localField:'_id', //which field on the store
+  foreignField: 'store' //which field on the review
+
+});
 
 module.exports=mongoose.model('Store',storeSchema); //creating and exporting the model to be used in controller
